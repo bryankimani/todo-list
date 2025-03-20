@@ -66,7 +66,6 @@ const TodoItem = ({ item, isLast, onDelete, onUpdate }) => {
 
   const handleMarkAsComplete = async () => {
     await onUpdate(item.id, { isComplete: true });
-    onRefresh(); // Refresh the list after marking as complete
   };
 
   return (
@@ -153,27 +152,27 @@ const DeleteConfirmationModal = ({ isOpen, onConfirm, onCancel }) => {
  */
 export const ToDoItemsPage = () => {
   const [todoItems, setTodoItems] = useState([]);
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(true);
   const [newHeading, setNewHeading] = useState("");
   const [newBody, setNewBody] = useState("");
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
 
-  // Helper function to refresh the list of incomplete tasks
-  const refreshList = async () => {
-    setLoading(true); // Start loading
-      try {
-        const items = await getAllToDoItems();
-        setTodoItems(items);
-      } catch (error) {
-      console.error("Failed to refresh to-do items.", error);
-      } finally {
-      setLoading(false); // Stop loading regardless of success or failure
-      }
-    };
+  // Fetch todos from the server
+  const fetchItems = async () => {
+    try {
+      const items = await getAllToDoItems();
+      setTodoItems(items);
+    } catch (error) {
+      console.error("Failed to fetch to-do items.", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  // Fetch todos on component mount
   useEffect(() => {
-    refreshList(); // Initial fetch
+    fetchItems();
   }, []);
 
   const handleCreate = async () => {
@@ -188,13 +187,13 @@ export const ToDoItemsPage = () => {
 
   const handleDelete = async (id) => {
     await deleteToDoItem(id);
-    setTodoItems(todoItems.filter((item) => item.id !== id));
+    await fetchItems(); // Refresh the list after deletion
     setDeleteModalOpen(false);
   };
 
   const handleUpdate = async (id, updatedItem) => {
-    const updated = await updateToDoItem(id, updatedItem);
-    setTodoItems(todoItems.map((item) => (item.id === id ? updated : item)));
+    await updateToDoItem(id, updatedItem);
+    await fetchItems(); // Refresh the list after update
   };
 
   return (
@@ -239,7 +238,6 @@ export const ToDoItemsPage = () => {
                 setDeleteModalOpen(true);
               }}
               onUpdate={handleUpdate}
-              onRefresh={refreshList} // Pass the refresh function
             />
           ))
         )}
