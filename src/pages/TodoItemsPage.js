@@ -91,6 +91,13 @@ const TodoItem = ({ item, isLast, onDelete, onUpdate }) => {
           <>
             <h2 className="card-title">{item.heading}</h2>
             <p>{item.body}</p>
+            <div className="text-sm text-gray-500">
+              <p>Created: {new Date(createdAt).toLocaleString()}</p>
+              <p>Updated: {new Date(updatedAt).toLocaleString()}</p>
+              {item.isComplete && (
+                <p>Completed: {new Date(completedAt).toLocaleString()}</p>
+              )}
+            </div>
             <div className="card-actions justify-end">
               <button onClick={() => setIsEditing(true)} className="btn btn-secondary">
                 Edit
