@@ -206,19 +206,31 @@ export const ToDoItemsPage = () => {
     fetchItems();
   }, []);
 
-  const handleCreate = async () => {
-    if (!newHeading || !newBody) return;
+  useEffect(() => {
+    if (selectedListId) {
+      fetchItems(selectedListId);
+    }
+  }, [selectedListId]);
 
-    const newItem = { heading: newHeading, body: newBody, isComplete: false };
+  const handleCreateList = async () => {
+    if (!newListName) return;
+    const newList = await createList(newListName);
+    setLists([...lists, newList]);
+    setNewListName("");
+  };
+
+  const handleCreateTask = async (listId, heading, body) => {
+    if (!heading || !body || !listId) return;
+
+    const newItem = { heading, body, isComplete: false, listId };
     const createdItem = await createToDoItem(newItem);
     setTodoItems([...todoItems, createdItem]);
-    setNewHeading("");
-    setNewBody("");
+    setShowTaskFormForList(null); // Hide the task form after creation
   };
 
   const handleDelete = async (id) => {
     await deleteToDoItem(id);
-    await fetchItems(); // Refresh the list after deletion
+    await fetchItems(selectedListId);
     setDeleteModalOpen(false);
   };
 
