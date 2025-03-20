@@ -91,8 +91,11 @@ export const CompletedItemsPage = () => {
 
   return (
     <div className="CenterDiv">
-      {todoItems === undefined && <p>Loading...</p>}
-      {todoItems !== undefined &&
+      {loading ? (
+        <Loading />
+      ) : todoItems.length === 0 ? (
+        <p>No completed items found.</p>
+      ) : (
         todoItems.map((item, i) => (
           <TodoItem key={i} item={item} isLast={i === todoItems.length - 1} />
         ))}
