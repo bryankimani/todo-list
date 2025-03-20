@@ -1,6 +1,5 @@
 import logo from "./logo.svg";
 import "./App.css";
-import { Spacer } from "./Utils";
 import { Route, Routes } from "react-router";
 import { Homepage } from "./pages/Homepage";
 import { ToDoItemsPage } from "./pages/TodoItemsPage";
