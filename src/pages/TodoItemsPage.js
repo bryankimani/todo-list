@@ -36,7 +36,16 @@ const updateToDoItem = async (id, updatedItem) => {
 /**
  * Single todo item component.
  */
-const TodoItem = ({ item, isLast }) => {
+const TodoItem = ({ item, isLast, onDelete, onUpdate }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [updatedHeading, setUpdatedHeading] = useState(item.heading);
+  const [updatedBody, setUpdatedBody] = useState(item.body);
+
+  const handleUpdate = async () => {
+    await onUpdate(item.id, { heading: updatedHeading, body: updatedBody });
+    setIsEditing(false);
+  };
+
   return (
     <>
       <div className="TodoItemContainer">
