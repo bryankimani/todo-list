@@ -97,8 +97,14 @@ export const CompletedItemsPage = () => {
         <p>No completed items found.</p>
       ) : (
         todoItems.map((item, i) => (
-          <TodoItem key={i} item={item} isLast={i === todoItems.length - 1} />
-        ))}
+          <TodoItem
+            key={item.id} // Use item.id instead of index for better key management
+            item={item}
+            isLast={i === todoItems.length - 1}
+            onToggleCompletion={handleToggleCompletion}
+          />
+        ))
+      )}
     </div>
   );
 };
