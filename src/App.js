@@ -37,7 +37,7 @@ const AppHeader = () => {
             <li><a href="/completed">Completed</a></li>
             </ul>
           </div>
-      </div>
+        </div>
 
     </header>
   );

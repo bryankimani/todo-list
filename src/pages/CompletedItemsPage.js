@@ -61,7 +61,6 @@ const TodoItem = ({ item, isLast, onToggleCompletion }) => {
   );
 };
 
-const Loading = () => <p>Loading...</p>;
 
 export const CompletedItemsPage = () => {
   const [todoItems, setTodoItems] = useState([]);
@@ -99,20 +98,27 @@ export const CompletedItemsPage = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto mt-10">
       {loading ? (
         <div className="flex justify-center items-center h-screen">
           <span className="loading loading-spinner loading-lg"></span>
         </div>
       ) : todoItems.length === 0 ? (
-        <div className="text-center">
-          <p className="text-xl">No completed items found.</p>
-        </div>
+        <div className="hero bg-base-200 min-h-screen">
+              <div className="hero-content text-center">
+                <div className="max-w-md">
+                  <h1 className="text-5xl font-bold">Hello there</h1>
+                  <p className="py-6">
+                    You don't have any completed tasks yet.
+                  </p>
+                </div>
+              </div>
+            </div>
       ) : (
         <div className="space-y-8">
           {todoItems.map((item, i) => (
             <TodoItem
-            key={item.id} // Use item.id instead of index for better key management
+              key={item.id} // Use item.id instead of index for better key management
               item={item}
               isLast={i === todoItems.length - 1}
               onToggleCompletion={handleToggleCompletion}

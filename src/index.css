@@ -25,3 +25,8 @@
   color: #9ca3af; /* Ensure placeholder text is visible */
   opacity: 1; /* Ensure placeholder opacity is correct */
 }
+
+
+.recharts-wrapper {
+  min-width: 400px !important;
+}

@@ -58,7 +58,13 @@ export const Homepage = () => {
           </div>
         </div>
       </div>
-
+      <div className="text-center mt-10 p-10">
+      <h2 className="text-6xl pb-10 text-blue-600 dark:text-sky-400">Why ToDOS?</h2>
+      <p className="pb-10 text-dark-600 dark:text-sky-400">From simple checklists to complex projects, <br />
+      our task management app can handle it all.</p>
+      <h5 className="text-sm text-blue-600 dark:text-sky-400">No need to create projects or setups from scratch when <br />
+      we have 50+ templates made for you.</h5>
+      </div>
     </div>
   );
 };
