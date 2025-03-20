@@ -21,9 +21,9 @@ const AppHeader = () => {
         src={logo}
         className="App-logo"
         alt="logo"
-        onClick={() => (window.location.pathname = "")}
+        onClick={() => (window.location.pathname = "/")}
       />
-      <p className="AppHeaderText">To-do List</p>
+      <p className="AppHeaderText"><a href="/">To-do List</a></p>
       <div id="AppHeaderNavButtons">
         <a
           className="NavButton"
