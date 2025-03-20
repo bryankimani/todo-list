@@ -139,6 +139,27 @@ export const ToDoItemsPage = () => {
     fetchItems();
   }, []);
 
+  const handleCreate = async () => {
+    if (!newHeading || !newBody) return;
+
+    const newItem = { heading: newHeading, body: newBody, isComplete: false };
+    const createdItem = await createToDoItem(newItem);
+    setTodoItems([...todoItems, createdItem]);
+    setNewHeading("");
+    setNewBody("");
+  };
+
+  const handleDelete = async (id) => {
+    await deleteToDoItem(id);
+    setTodoItems(todoItems.filter((item) => item.id !== id));
+    setDeleteModalOpen(false);
+  };
+
+  const handleUpdate = async (id, updatedItem) => {
+    const updated = await updateToDoItem(id, updatedItem);
+    setTodoItems(todoItems.map((item) => (item.id === id ? updated : item)));
+  };
+
   return (
     <div className="CenterDiv">
       {todoItems === undefined && <p>Loading...</p>}
