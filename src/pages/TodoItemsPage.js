@@ -32,12 +32,12 @@ const getAllToDoItems = async (listId) => {
  * Create a new todo item.
  */
 const createToDoItem = async (newItem) => {
-  const now = new Date().toISOString(); // Get current timestamp
+  const now = new Date().toISOString();
   const itemWithDates = {
     ...newItem,
-    createdAt: now, // Set creation date
-    updatedAt: now, // Set update date (same as creation date initially)
-    completedAt: null, // Set completion date to null initially
+    createdAt: now,
+    updatedAt: now,
+    completedAt: null,
   };
   return (await axios.post("http://localhost:3001/items", itemWithDates)).data;
 };
@@ -53,11 +53,11 @@ const deleteToDoItem = async (id) => {
  * Update a todo item.
  */
 const updateToDoItem = async (id, updatedItem) => {
-  const now = new Date().toISOString(); // Get current timestamp
+  const now = new Date().toISOString();
   const itemWithDates = {
     ...updatedItem,
-    updatedAt: now, // Update the timestamp
-    completedAt: updatedItem.isComplete ? now : null, // Set completion date if isComplete is true
+    updatedAt: now,
+    completedAt: updatedItem.isComplete ? now : null,
   };
   return (await axios.patch(`http://localhost:3001/items/${id}`, itemWithDates)).data;
 };
@@ -65,7 +65,7 @@ const updateToDoItem = async (id, updatedItem) => {
 /**
  * Single todo item component.
  */
-const TodoItem = ({ item, isLast, onDelete, onUpdate }) => {
+const TodoItem = ({ item, isLast, onDelete, onUpdate, onStar }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [updatedHeading, setUpdatedHeading] = useState(item.heading);
   const [updatedBody, setUpdatedBody] = useState(item.body);
@@ -112,10 +112,10 @@ const TodoItem = ({ item, isLast, onDelete, onUpdate }) => {
             <h2 className="card-title">{item.heading}</h2>
             <p>{item.body}</p>
             <div className="text-sm text-gray-500">
-              <p>Created: {new Date(createdAt).toLocaleString()}</p>
-              <p>Updated: {new Date(updatedAt).toLocaleString()}</p>
+              <p>Created: {new Date(item.createdAt).toLocaleString()}</p>
+              <p>Updated: {new Date(item.updatedAt).toLocaleString()}</p>
               {item.isComplete && (
-                <p>Completed: {new Date(completedAt).toLocaleString()}</p>
+                <p>Completed: {new Date(item.completedAt).toLocaleString()}</p>
               )}
             </div>
             <div className="card-actions justify-end">
@@ -197,7 +197,7 @@ export const ToDoItemsPage = () => {
   // Fetch todos for the selected list
   const fetchItems = async (listId) => {
     try {
-      const items = await getAllToDoItems();
+      const items = await getAllToDoItems(listId);
       setTodoItems(items);
     } catch (error) {
       console.error("Failed to fetch to-do items.", error);
@@ -208,7 +208,7 @@ export const ToDoItemsPage = () => {
 
   // Fetch todos on component mount
   useEffect(() => {
-    fetchItems();
+    fetchLists();
   }, []);
 
   useEffect(() => {
@@ -329,6 +329,12 @@ export const ToDoItemsPage = () => {
 
       {/* Content */}
       <div className="w-full md:w-3/4 p-4">
+        <div className="flex justify-between mb-4">
+          <button onClick={() => setShowStarred(!showStarred)} className="btn btn-warning">
+            {showStarred ? "Show All" : "Show Starred"}
+          </button>
+          <ReactCalendar onChange={setSelectedDate} value={selectedDate} />
+        </div>
         {loading ? (
           <div className="flex justify-center items-center h-screen">
             <span className="loading loading-spinner loading-lg"></span>
@@ -336,16 +342,17 @@ export const ToDoItemsPage = () => {
         ) : todoItems.length === 0 ? (
           <p>No to-do items found.</p>
         ) : (
-          todoItems.map((item, i) => (
+          filteredTodos.map((item, i) => (
             <TodoItem
               key={item.id}
               item={item}
-              isLast={i === todoItems.length - 1}
+              isLast={i === filteredTodos.length - 1}
               onDelete={(id) => {
                 setItemToDelete(id);
                 setDeleteModalOpen(true);
               }}
               onUpdate={handleUpdate}
+              onStar={handleStar}
             />
           ))
         )}
