@@ -5,35 +5,33 @@ import "./TodoItems.css";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css"; // Import the styles
+import "react-datepicker/dist/react-datepicker.css";
 
-/**
- * Fetch all lists.
- */
-const getAllLists = async () => {
+// Service module for API calls
+const todoService = {
+  getAllLists: async () => {
   return (await axios.get("http://localhost:3001/lists")).data;
-};
+  },
 
-/**
- * Create a new list.
- */
-const createList = async (name) => {
+  createList: async (name) => {
   return (await axios.post("http://localhost:3001/lists", { name })).data;
-};
+  },
 
-/**
- * Fetch all to-do items for a specific list or all lists.
- */
-const getAllToDoItems = async (listId) => {
-  let url = "http://localhost:3001/items?isComplete=false";
-  
-  // Append listId to the URL only if it's provided
+  getAllToDoItems: async (listId) => {
+    let url = "http://localhost:3001/items?isComplete=false"; // Fetch only incomplete todos
   if (listId) {
     url += `&listId=${listId}`;
   }
+    return (await axios.get(url)).data;
+  },
 
+  getAllTodos: async (listId) => {
+    let url = "http://localhost:3001/items"; // Fetch all todos
+    if (listId) {
+      url += `?listId=${listId}`;
+    }
   return (await axios.get(url)).data;
-};
+  },
 
 /**
  * Create a new todo item.
