@@ -33,21 +33,21 @@ const todoService = {
 };
 
 const TodoItem = ({ item, isLast, onToggleCompletion }) => {
-  console.log(item); // Debugging
   return (
-    <>
-      <div className="TodoItemContainer">
-        <p className="TodoItemHeader">{item.heading}</p>
-        <p className="TodoText">{item.body}</p>
-        <button
-          className="btn btn-secondary"
-          onClick={() => onToggleCompletion(item.id, item.isComplete)}
-        >
-          Move Back to To-Do
-        </button>
+    <div className="card bg-base-100 shadow-xl mb-8">
+      <div className="card-body">
+        <h2 className="card-title">{item.heading}</h2>
+        <p>{item.body}</p>
+        <div className="card-actions justify-end">
+          <button
+            className="btn btn-secondary"
+            onClick={() => onToggleCompletion(item.id, item.isComplete)}
+          >
+            Move Back to To-Do
+          </button>
+        </div>
       </div>
-      {!isLast && <Spacer height="5vmin" />}
-    </>
+    </div>
   );
 };
 
@@ -62,7 +62,6 @@ export const CompletedItemsPage = () => {
     const fetchItems = async () => {
       try {
         const items = await todoService.getAllToDoItems();
-        console.log("Fetched items:", items); // Debugging
         setTodoItems(items);
       } catch (error) {
         console.error("Failed to fetch completed items.", error);
@@ -90,20 +89,26 @@ export const CompletedItemsPage = () => {
   };
 
   return (
-    <div className="CenterDiv">
+    <div className="container mx-auto p-4">
       {loading ? (
-        <Loading />
+        <div className="flex justify-center items-center h-screen">
+          <span className="loading loading-spinner loading-lg"></span>
+        </div>
       ) : todoItems.length === 0 ? (
-        <p>No completed items found.</p>
+        <div className="text-center">
+          <p className="text-xl">No completed items found.</p>
+        </div>
       ) : (
-        todoItems.map((item, i) => (
-          <TodoItem
+        <div className="space-y-8">
+          {todoItems.map((item, i) => (
+            <TodoItem
             key={item.id} // Use item.id instead of index for better key management
-            item={item}
-            isLast={i === todoItems.length - 1}
-            onToggleCompletion={handleToggleCompletion}
-          />
-        ))
+              item={item}
+              isLast={i === todoItems.length - 1}
+              onToggleCompletion={handleToggleCompletion}
+            />
+          ))}
+        </div>
       )}
     </div>
   );
