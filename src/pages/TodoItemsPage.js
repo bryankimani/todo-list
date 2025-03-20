@@ -161,9 +161,37 @@ export const ToDoItemsPage = () => {
   };
 
   return (
-    <div className="CenterDiv">
-      {todoItems === undefined && <p>Loading...</p>}
-      {todoItems !== undefined &&
+    <div className="flex flex-col md:flex-row min-h-screen">
+      {/* Sidebar */}
+      <div className="w-full md:w-1/4 bg-base-200 p-4">
+        <h2 className="text-xl font-bold mb-4">Create New Todo</h2>
+        <input
+          type="text"
+          placeholder="Heading"
+          value={newHeading}
+          onChange={(e) => setNewHeading(e.target.value)}
+          className="input input-bordered w-full mb-2"
+        />
+        <textarea
+          placeholder="Body"
+          value={newBody}
+          onChange={(e) => setNewBody(e.target.value)}
+          className="textarea textarea-bordered w-full mb-2"
+        />
+        <button onClick={handleCreate} className="btn btn-primary w-full">
+          Create
+        </button>
+      </div>
+
+      {/* Content */}
+      <div className="w-full md:w-3/4 p-4">
+        {loading ? (
+          <div className="flex justify-center items-center h-screen">
+            <span className="loading loading-spinner loading-lg"></span>
+          </div>
+        ) : todoItems.length === 0 ? (
+          <p>No to-do items found.</p>
+        ) : (
         todoItems.map((item, i) => (
           <TodoItem key={i} item={item} isLast={i === todoItems.length - 1} />
         ))}
