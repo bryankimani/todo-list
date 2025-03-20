@@ -179,7 +179,7 @@ export const Homepage = () => {
                       
                     </div>
                    
-      </div>
+                </div>
                
             </section>
 
