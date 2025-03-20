@@ -128,6 +128,9 @@ const TodoItem = ({ item, isLast, onDelete, onUpdate }) => {
               <button onClick={() => onDelete(item.id)} className="btn btn-error">
                 Delete
               </button>
+              <button onClick={() => onStar(item.id)} className="btn btn-warning">
+                {item.starred ? "Unstar" : "Star"}
+              </button>
             </div>
           </>
         )}
@@ -236,8 +239,27 @@ export const ToDoItemsPage = () => {
 
   const handleUpdate = async (id, updatedItem) => {
     await updateToDoItem(id, updatedItem);
-    await fetchItems(); // Refresh the list after update
+    await fetchItems(selectedListId);
   };
+
+  const handleStar = (id) => {
+    setTodoItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === id ? { ...item, starred: !item.starred } : item
+      )
+    );
+  };
+
+  const calculateProgress = (todos) => {
+    const completedTodos = todos.filter((todo) => todo.isComplete).length;
+    return (completedTodos / todos.length) * 100 || 0;
+  };
+
+  const filteredTodos = todoItems.filter((todo) => {
+    if (showStarred && !todo.starred) return false;
+    const todoDate = new Date(todo.createdAt).toDateString();
+    return todoDate === selectedDate.toDateString();
+  });
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen">
