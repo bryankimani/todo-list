@@ -57,6 +57,7 @@ export const CompletedItemsPage = () => {
   const [todoItems, setTodoItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Fetch completed items on component mount
   useEffect(() => {
     const fetchItems = async () => {
       try {
