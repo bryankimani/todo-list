@@ -75,6 +75,20 @@ export const CompletedItemsPage = () => {
     fetchItems();
   }, []);
 
+  // Handle toggling an item back to incomplete
+  const handleToggleCompletion = async (id, isComplete) => {
+    try {
+      // Update the item's completion status on the server
+      await todoService.toggleCompletion(id, isComplete);
+
+      // Refresh the list of completed items
+      const updatedItems = await todoService.getAllToDoItems();
+      setTodoItems(updatedItems);
+    } catch (error) {
+      console.error("Failed to toggle item completion status.", error);
+    }
+  };
+
   return (
     <div className="CenterDiv">
       {todoItems === undefined && <p>Loading...</p>}
