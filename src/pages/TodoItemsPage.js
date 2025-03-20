@@ -285,7 +285,7 @@ export const ToDoItemsPage = () => {
   });
 
   return (
-    <div className="container mx-auto flex flex-col md:flex-row min-h-screen">
+    <div className="container mx-auto flex flex-col md:flex-row min-h-screen mt-10">
       {/* Sidebar */}
       <div className="w-full md:w-1/4 bg-base-200 p-4">
         <h2 className="text-xl font-bold mb-4">Lists</h2>
@@ -299,10 +299,16 @@ export const ToDoItemsPage = () => {
         <button onClick={handleCreateList} className="btn btn-primary w-full mb-4">
           Create List
         </button>
-        {lists.map((list) => (
+        <ul class="list bg-base-100 rounded-box shadow-md">
+        {lists.map((list, i) => (
           <div key={list.id} className="mb-4">
-            <div className="p-2 hover:bg-base-300 cursor-pointer">
+            <li class="list-row">
+              <div class="text-4xl font-thin opacity-30 tabular-nums">{i+1}</div>
+              <div class="list-col-grow">
               <div>{list.name}</div>
+                <div class="text-xs uppercase font-semibold opacity-60">
+                    <div className="hover:bg-base-300 cursor-pointer">
+                  
               <div className="w-full bg-gray-300 rounded-full h-2">
                 <div
                   className="bg-blue-500 h-2 rounded-full"
@@ -310,12 +316,12 @@ export const ToDoItemsPage = () => {
                 ></div>
               </div>
             </div>
-            <button
-              onClick={() => setShowTaskFormForList(list.id)}
-              className="btn btn-secondary w-full mt-2"
-            >
+                </div>
+              </div>
+              <button class="btn btn-square btn-ghost"  onClick={() => setShowTaskFormForList(list.id)}>
               Add Task
             </button>
+            </li>
             {showTaskFormForList === list.id && (
               <div className="mt-2">
                 <input
@@ -343,10 +349,11 @@ export const ToDoItemsPage = () => {
             )}
           </div>
         ))}
+        </ul>
       </div>
 
       {/* Content */}
-      <div className="w-full md:w-3/4 p-4">
+      <div className="w-full md:w-3/4 pl-4 pb-0">
         <div className="flex justify-between mb-4">
           <div className="flex gap-2">
             <button onClick={() => setShowStarred(!showStarred)} className="btn btn-warning">
