@@ -30,3 +30,32 @@
 .recharts-wrapper {
   min-width: 400px !important;
 }
+
+
+/* Card body with fixed height and scrollbar */
+.card-item-body {
+  height: 200px; /* Fixed height */
+  overflow-y: auto; /* Enable vertical scrollbar */
+}
+
+
+/* Container for the cards */
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 columns */
+  gap: 1rem; /* Space between cards */
+  padding: 1rem; /* Optional padding */
+}
+
+/* Responsive behavior */
+@media (max-width: 1024px) {
+  .card-container {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns for medium screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .card-container {
+    grid-template-columns: 1fr; /* 1 column for small screens */
+  }
+}
