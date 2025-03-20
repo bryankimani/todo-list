@@ -317,26 +317,31 @@ export const ToDoItemsPage = () => {
         <button onClick={handleCreateList} className="btn btn-primary w-full mb-4">
           Create task group
         </button>
-        <ul class="list bg-base-100 rounded-box shadow-md">
+  <ul className="list bg-base-100 rounded-box shadow-md">
         {lists.map((list, i) => (
           <div key={list.id} className="mb-4">
-            <li class="list-row">
-              <div class="text-4xl font-thin opacity-30 tabular-nums">{i+1}</div>
-              <div class="list-col-grow">
+        <li className="list-row">
+          <div className="text-4xl font-thin opacity-30 tabular-nums">{i + 1}</div>
+          <div className="list-col-grow">
                <div>{list.name}</div>
-                <div class="text-xs uppercase font-semibold opacity-60">
+            <div className="text-xs uppercase font-semibold opacity-60">
                     <div className="hover:bg-base-300 cursor-pointer">
-                  
                   <div className="w-full bg-gray-300 rounded-full h-2">
                     <div
                       className="bg-blue-500 h-2 rounded-full"
-                      style={{ width: `${calculateProgress(todoItems)}%` }}
+                    style={{ width: `${calculateProgress(todoItems, list.id)}%` }}
                     ></div>
                   </div>
-                </div>
+                <div className="mt-1 text-center text-gray-600">
+                  {`${todoItems.filter((todo) => todo.listId === list.id && todo.isComplete).length} / ${todoItems.filter((todo) => todo.listId === list.id).length} completed`}
                 </div>
               </div>
-              <button class="btn btn-square btn-ghost"  onClick={() => setShowTaskFormForList(list.id)}>
+            </div>
+          </div>
+          <button
+            className="btn btn-square btn-ghost"
+            onClick={() => setShowTaskFormForList(list.id)}
+          >
               Add Task
               </button>
             </li>
