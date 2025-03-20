@@ -1,6 +1,5 @@
 import "../App.css";
 import axios from "axios";
-import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -35,7 +34,7 @@ const todoService = {
   const itemWithDates = {
     ...newItem,
     createdAt: now,
-      updatedAt: now
+      updatedAt: now,
   };
   return (await axios.post("http://localhost:3001/items", itemWithDates)).data;
   },
@@ -77,7 +76,8 @@ const TodoItem = ({
 
   const handleMarkAsComplete = async () => {
     await onUpdate(item.id, { isComplete: true });
-    await fetchItems(selectedFilterListId); // Refresh the list based on the current filter
+    await new Promise((resolve) => setTimeout(resolve, 500)); // Add a small delay
+    await fetchItems(selectedFilterListId); // Refresh the list
   };
 
   return (
@@ -205,29 +205,19 @@ export const ToDoItemsPage = () => {
         const todos = await todoService.getAllToDoItems(); // Fetch incomplete todos
         setTodoItems(todos);
 
-        const allTodos = await todoService.getAllTodos(); // Fetch all todos
-        setAllTodos(allTodos); // Store all todos in state
+        const allItems = await todoService.getAllTodos(); // Fetch all todos
+        setAllTodos(allItems);
 
         // Calculate progress for each list
         const progressData = {};
         for (const list of lists) {
-          const todosForList = allTodos.filter((todo) => todo.listId === list.id);
+          const todosForList = allItems.filter((todo) => todo.listId === list.id);
           const completedTodos = todosForList.filter((todo) => todo.isComplete).length;
           progressData[list.id] = (completedTodos / todosForList.length) * 100 || 0;
         }
         setProgress(progressData);
     } catch (error) {
-      console.error("Failed to fetch lists.", error);
-    }
-  };
-
-  // Fetch todos for the selected list
-  const fetchItems = async (listId) => {
-    try {
-      const items = await getAllToDoItems(listId || null); // Pass null for "All Lists"
-      setTodoItems(items);
-    } catch (error) {
-      console.error("Failed to fetch to-do items.", error);
+        console.error("Failed to fetch data.", error);
     } finally {
       setLoading(false);
     }
@@ -250,6 +240,7 @@ export const ToDoItemsPage = () => {
     const newItem = { heading, body, isComplete: false, listId };
     const createdItem = await todoService.createToDoItem(newItem);
     setTodoItems([...todoItems, createdItem]);
+    setAllTodos([...allTodos, createdItem]); // Update allTodos
     setShowTaskFormForList(null);
   };
 
@@ -258,12 +249,40 @@ export const ToDoItemsPage = () => {
     await todoService.deleteToDoItem(id);
     const updatedItems = await todoService.getAllToDoItems(selectedFilterListId || null);
     setTodoItems(updatedItems);
+
+    const updatedAllItems = await todoService.getAllTodos(selectedFilterListId || null);
+    setAllTodos(updatedAllItems); // Update allTodos
+
     setDeleteModalOpen(false);
   };
 
   // Handle updating a todo item
   const handleUpdate = async (id, updatedItem) => {
+    // Update the task in the backend
     await todoService.updateToDoItem(id, updatedItem);
+  
+    // Fetch the updated list of todos
+    const updatedAllItems = await todoService.getAllTodos(selectedFilterListId || null);
+    setAllTodos(updatedAllItems); // Update allTodos
+  
+    // Find the listId of the updated task
+    const updatedTask = updatedAllItems.find((item) => item.id === id);
+    if (updatedTask) {
+      const listId = updatedTask.listId;
+  
+      // Recalculate progress for the specific list
+      const todosForList = updatedAllItems.filter((todo) => todo.listId === listId);
+      const completedTodos = todosForList.filter((todo) => todo.isComplete).length;
+      const newProgress = (completedTodos / todosForList.length) * 100 || 0;
+  
+      // Update the progress state
+      setProgress((prevProgress) => ({
+        ...prevProgress,
+        [listId]: newProgress,
+      }));
+    }
+  
+    // Fetch the updated list of incomplete todos
     const updatedItems = await todoService.getAllToDoItems(selectedFilterListId || null);
     setTodoItems(updatedItems);
   };
@@ -273,6 +292,11 @@ export const ToDoItemsPage = () => {
     setTodoItems((prevItems) =>
       prevItems.map((item) =>
         item.id === id ? { ...item, starred: !item.starred } : item
+      )
+    );
+    setAllTodos((prevTodos) =>
+      prevTodos.map((todo) =>
+        todo.id === id ? { ...todo, starred: !todo.starred } : todo
       )
     );
   };
@@ -315,7 +339,7 @@ export const ToDoItemsPage = () => {
                   <div className="w-full bg-gray-300 rounded-full h-2">
                     <div
                       className="bg-blue-500 h-2 rounded-full"
-                          style={{ width: `${progress[list.id] || 0}%` }}
+                        style={{ width: `${progress[list.id] || 0}%` }} // Progress bar width
                     ></div>
                   </div>
                 <div className="mt-1 text-center text-gray-600">
