@@ -5,16 +5,33 @@ import "./TodoItems.css";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-/**
- * This makes a request to the server / DB to get all to-do's that aren't currently completed.
- */
-const getAllToDoItems = async () => {
-  return (await axios.get("http://localhost:3001/items?isComplete=true")).data;
+// Service module for API calls
+const todoService = {
+  getAllToDoItems: async () => {
+    try {
+      const response = await axios.get("http://localhost:3001/items?isComplete=true");
+      console.log("API Response:", response.data); // Debugging
+      return response.data;
+    } catch (error) {
+      console.error("Failed to fetch completed items.", error);
+      throw error;
+    }
+  },
+
+  toggleCompletion: async (id, isComplete) => {
+    try {
+      const response = await axios.patch(`http://localhost:3001/items/${id}`, {
+        isComplete: !isComplete,
+      });
+      console.log("Toggled item:", response.data); // Debugging
+      return response.data;
+    } catch (error) {
+      console.error("Failed to toggle item completion status.", error);
+      throw error;
+    }
+  },
 };
 
-/**
- * This defines a single todo item, which is defined by the schema in `database/db.json`.
- */
 const TodoItem = ({ item, isLast }) => {
   console.log(item);
   return (
