@@ -22,7 +22,7 @@ const createList = async (name) => {
 };
 
 /**
- * Fetch all to-do items for a specific list.
+ * Fetch all to-do items for a specific list or all lists.
  */
 const getAllToDoItems = async (listId) => {
   let url = "http://localhost:3001/items?isComplete=false";
@@ -72,7 +72,15 @@ const updateToDoItem = async (id, updatedItem) => {
 /**
  * Single todo item component.
  */
-const TodoItem = ({ item, isLast, onDelete, onUpdate, onStar, fetchItems, selectedListId }) => {
+const TodoItem = ({
+  item,
+  isLast,
+  onDelete,
+  onUpdate,
+  onStar,
+  fetchItems,
+  selectedFilterListId,
+}) => {
   const [isEditing, setIsEditing] = useState(false);
   const [updatedHeading, setUpdatedHeading] = useState(item.heading);
   const [updatedBody, setUpdatedBody] = useState(item.body);
@@ -84,7 +92,7 @@ const TodoItem = ({ item, isLast, onDelete, onUpdate, onStar, fetchItems, select
 
   const handleMarkAsComplete = async () => {
     await onUpdate(item.id, { isComplete: true });
-    await fetchItems(selectedListId); // Refresh the list
+    await fetchItems(selectedFilterListId); // Refresh the list based on the current filter
   };
 
   return (
@@ -201,7 +209,7 @@ export const ToDoItemsPage = () => {
   // Fetch todos for the selected list
   const fetchItems = async (listId) => {
     try {
-      const items = await getAllToDoItems(listId);
+      const items = await getAllToDoItems(listId || null); // Pass null for "All Lists"
       setTodoItems(items);
     } catch (error) {
       console.error("Failed to fetch to-do items.", error);
@@ -216,12 +224,16 @@ export const ToDoItemsPage = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedFilterListId === "") {
-      // Fetch items from all lists
-      fetchItems(null); 
+    if (selectedListId) {
+      fetchItems(selectedListId);
+    }
+  }, [selectedListId]);
+
+  useEffect(() => {
+    if (selectedFilterListId !== "") {
+      fetchItems(selectedFilterListId); // Fetch items for the selected filter list
     } else {
-      // Fetch items from the selected list
-      fetchItems(selectedFilterListId);
+      fetchItems(null); // Fetch items for all lists
     }
   }, [selectedFilterListId]);
 
@@ -243,13 +255,13 @@ export const ToDoItemsPage = () => {
 
   const handleDelete = async (id) => {
     await deleteToDoItem(id);
-    await fetchItems(selectedListId);
+    await fetchItems(selectedFilterListId || null);
     setDeleteModalOpen(false);
   };
 
   const handleUpdate = async (id, updatedItem) => {
     await updateToDoItem(id, updatedItem); // Update the to-do
-    await fetchItems(selectedListId); // Refresh the list
+    await fetchItems(selectedFilterListId || null); // Refresh the list
   };
 
   const handleStar = (id) => {
@@ -273,7 +285,7 @@ export const ToDoItemsPage = () => {
   });
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen">
+    <div className="container mx-auto flex flex-col md:flex-row min-h-screen">
       {/* Sidebar */}
       <div className="w-full md:w-1/4 bg-base-200 p-4">
         <h2 className="text-xl font-bold mb-4">Lists</h2>
@@ -345,7 +357,7 @@ export const ToDoItemsPage = () => {
               onChange={(e) => setSelectedFilterListId(e.target.value)}
               className="select select-bordered"
             >
-              <option value="">All Lists</option> {/* This will trigger fetching all lists */}
+              <option value="">All Lists</option>
               {lists.map((list) => (
                 <option key={list.id} value={list.id}>
                   {list.name}
@@ -374,7 +386,7 @@ export const ToDoItemsPage = () => {
               onUpdate={handleUpdate}
               onStar={handleStar}
               fetchItems={fetchItems} // Pass fetchItems as a prop
-              selectedListId={selectedListId} // Pass selectedListId as a prop
+              selectedFilterListId={selectedFilterListId} // Pass selectedFilterListId instead of selectedListId
             />
           ))
         )}
