@@ -114,7 +114,7 @@ const DeleteConfirmationModal = ({ isOpen, onConfirm, onCancel }) => {
 };
 
 /**
- * This defines the to-do list, which contains items that haven't been completed yet.
+ * Main todo list page with sidebar and content.
  */
 export const ToDoItemsPage = () => {
   const [todoItems, setTodoItems] = useState([]);
@@ -192,7 +192,7 @@ export const ToDoItemsPage = () => {
         ) : todoItems.length === 0 ? (
           <p>No to-do items found.</p>
         ) : (
-        todoItems.map((item, i) => (
+          todoItems.map((item, i) => (
             <TodoItem
               key={item.id}
               item={item}
