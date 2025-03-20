@@ -22,8 +22,8 @@ const createList = async (name) => {
 /**
  * Fetch all to-do items for a specific list.
  */
-const getAllToDoItems = async () => {
-  return (await axios.get("http://localhost:3001/items?isComplete=false")).data;
+const getAllToDoItems = async (listId) => {
+  return (await axios.get(`http://localhost:3001/items?listId=${listId}`)).data;
 };
 
 /**
