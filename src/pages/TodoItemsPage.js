@@ -35,8 +35,7 @@ const todoService = {
   const itemWithDates = {
     ...newItem,
     createdAt: now,
-    updatedAt: now,
-    completedAt: null,
+      updatedAt: now
   };
   return (await axios.post("http://localhost:3001/items", itemWithDates)).data;
   },
@@ -49,8 +48,7 @@ const todoService = {
   const now = new Date().toISOString();
   const itemWithDates = {
     ...updatedItem,
-    updatedAt: now,
-    completedAt: updatedItem.isComplete ? now : null,
+      updatedAt: now
   };
   return (await axios.patch(`http://localhost:3001/items/${id}`, itemWithDates)).data;
   },

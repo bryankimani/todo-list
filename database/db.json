@@ -1,22 +1,59 @@
 {
+  "lists": [
+    {
+      "id": "1",
+      "name": "Personal"
+    },
+    {
+      "id": "2",
+      "name": "Work"
+    }
+  ],
   "items": [
     {
-      "id": 0,
-      "heading": "Completed item example",
-      "body": "This is an example to-do list item that has been completed.",
-      "isComplete": true
+      "id": "1",
+      "heading": "Grocery Shopping",
+      "body": "Pick up milk, bread, eggs, and vegetables from the supermarket. Check the expiration dates and make sure to get organic produce if possible. Yes",
+      "isComplete": true,
+      "listId": "1",
+      "createdAt": "2025-03-20T14:52:46.412Z",
+      "updatedAt": "2025-03-20T20:29:58.379Z"
     },
     {
-      "id": 1,
-      "heading": "To-do List Example",
-      "body": "This is an example to-do list item. You can check this off once it's done!",
-      "isComplete": false
+      "id": "2",
+      "heading": "Call Mom",
+      "body": "Give mom a call to check in and see how her week is going. Ask about her plans for the weekend and offer to help with anything she needs.",
+      "isComplete": false,
+      "listId": "2",
+      "createdAt": "2025-03-20T14:53:35.425Z",
+      "updatedAt": "2025-03-20T20:29:48.585Z"
     },
     {
-      "id": 2,
-      "heading": "Long To-do Item Example",
-      "body": "Wellness is the breath we take, \nThe gentle pause, the steps we make. \nIt’s more than skin, more than the eyes, \nA deeper place where spirit lies. \n\nIt’s found in moments, soft and still, \nIn morning light, in evening’s chill. \nIt’s peace within, not seen or told, \nA warmth that melts away the cold. \n\nWellness grows in steady care, \nIn love for self, in thoughts that spare. \nIt’s the balance of the mind and soul, \nThe journey to feel whole, not small. \n\nIt’s nourishing both heart and skin, \nIn kindness given, in joy within. \nWellness thrives where joy is free, \nIn laughter shared, in harmony. \n\nSo take each day, embrace the flow, \nWith every step, let healing grow. \nWellness is the choice to be, \nAlive, at peace, and truly free.",
-      "isComplete": false
+      "id": "3",
+      "heading": "Finish Project Report",
+      "body": "Complete the project report by adding the final section on results and conclusions. Proofread the entire document for any errors and submit it by 5 PM.",
+      "isComplete": true,
+      "listId": "1",
+      "createdAt": "2025-03-20T18:52:25.211Z",
+      "updatedAt": "2025-03-20T20:30:02.759Z"
+    },
+    {
+      "id": "4",
+      "heading": "Exercise",
+      "body": "Go for a 30-minute run in the park. If the weather is bad, do a workout video at home. Stretch afterwards to prevent any muscle soreness.",
+      "isComplete": true,
+      "listId": "2",
+      "createdAt": "2025-03-20T18:57:55.649Z",
+      "updatedAt": "2025-03-20T20:30:08.693Z"
+    },
+    {
+      "id": "ef03",
+      "heading": "Study ruby on rails",
+      "body": "Get started with Ruby nuggets",
+      "isComplete": true,
+      "listId": "1",
+      "createdAt": "2025-03-20T20:12:04.765Z",
+      "updatedAt": "2025-03-20T20:30:19.139Z"
     }
   ]
 }

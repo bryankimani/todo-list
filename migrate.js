@@ -9,8 +9,7 @@ const db = JSON.parse(fs.readFileSync(dbPath, "utf-8"));
 db.items = db.items.map((item) => ({
   ...item,
   createdAt: item.createdAt || new Date().toISOString(),
-  updatedAt: item.updatedAt || new Date().toISOString(),
-  completedAt: item.completedAt || null,
+  updatedAt: item.updatedAt || new Date().toISOString()
 }));
 
 // Save the updated db.json
