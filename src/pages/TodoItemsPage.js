@@ -47,10 +47,42 @@ const TodoItem = ({ item, isLast, onDelete, onUpdate }) => {
   };
 
   return (
-    <>
-      <div className="TodoItemContainer">
-        <p className="TodoItemHeader">{item.heading}</p>
-        <p className="TodoText">{item.body}</p>
+    <div className="card bg-base-100 shadow-xl mb-4">
+      <div className="card-body">
+        {isEditing ? (
+          <>
+            <input
+              type="text"
+              value={updatedHeading}
+              onChange={(e) => setUpdatedHeading(e.target.value)}
+              className="input input-bordered w-full mb-2"
+            />
+            <textarea
+              value={updatedBody}
+              onChange={(e) => setUpdatedBody(e.target.value)}
+              className="textarea textarea-bordered w-full mb-2"
+            />
+            <button onClick={handleUpdate} className="btn btn-primary">
+              Save
+            </button>
+            <button onClick={() => setIsEditing(false)} className="btn btn-ghost">
+              Cancel
+            </button>
+          </>
+        ) : (
+          <>
+            <h2 className="card-title">{item.heading}</h2>
+            <p>{item.body}</p>
+            <div className="card-actions justify-end">
+              <button onClick={() => setIsEditing(true)} className="btn btn-secondary">
+                Edit
+              </button>
+              <button onClick={() => onDelete(item.id)} className="btn btn-error">
+                Delete
+              </button>
+            </div>
+          </>
+        )}
       </div>
       {!isLast && <Spacer height="5vmin" />}
     </>
