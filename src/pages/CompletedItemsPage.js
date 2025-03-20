@@ -54,8 +54,8 @@ const TodoItem = ({ item, isLast, onToggleCompletion }) => {
 const Loading = () => <p>Loading...</p>;
 
 export const CompletedItemsPage = () => {
-  // Leave undefined so we can tell when the page is "loading"
-  const [todoItems, setTodoItems] = useState();
+  const [todoItems, setTodoItems] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getAllToDoItems()
