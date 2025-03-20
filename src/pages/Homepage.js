@@ -38,7 +38,7 @@ export const Homepage = () => {
   }, []);
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto">
       {/* Header */}
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold text-primary">Welcome to the Home Page!</h1>

@@ -13,36 +13,32 @@ import { CompletedItemsPage } from "./pages/CompletedItemsPage";
  * Feel free to edit this code if you'd like, but it is NOT required.
  */
 const AppHeader = () => {
-  const todoSelected = window.location.pathname === "/todos";
-  const completedItemsSelected = window.location.pathname === "/completed";
   return (
-    <header className="AppHeader">
-      <img
-        src={logo}
-        className="App-logo"
-        alt="logo"
-        onClick={() => (window.location.pathname = "/")}
-      />
-      <p className="AppHeaderText"><a href="/">To-do List</a></p>
-      <div id="AppHeaderNavButtons">
-        <a
-          className="NavButton"
-          href="/todos"
-          style={{ textDecoration: todoSelected ? "underline" : "none" }}
-        >
-          To-do's
-        </a>
-        <Spacer width={"5vmin"} />
-        <a
-          className="NavButton"
-          href="/completed"
-          style={{
-            textDecoration: completedItemsSelected ? "underline" : "none",
-          }}
-        >
-          Completed
-        </a>
+    <header className="container mx-auto">
+      <div className="navbar bg-base-100 shadow-sm">
+          <div className="navbar-start">
+            <div className="dropdown">
+              <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> 
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /> </svg>
+              </div>
+              <ul
+                tabindex="0"
+                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                <li><a href="/todos">Todos</a></li>
+                <li><a href="/completed">Completed</a></li>
+              </ul>
+            </div>
+            <a className="btn btn-ghost text-xl" href="/">daisyUI</a>
+          </div>
+          <div className="navbar-end hidden lg:flex">
+            <ul className="menu menu-horizontal px-1">
+            <li><a href="/todos">Todos</a></li>
+            <li><a href="/completed">Completed</a></li>
+            </ul>
+          </div>
       </div>
+
     </header>
   );
 };
