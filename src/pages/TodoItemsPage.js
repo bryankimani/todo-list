@@ -33,10 +33,7 @@ const todoService = {
   return (await axios.get(url)).data;
   },
 
-/**
- * Create a new todo item.
- */
-const createToDoItem = async (newItem) => {
+  createToDoItem: async (newItem) => {
   const now = new Date().toISOString();
   const itemWithDates = {
     ...newItem,
@@ -45,19 +42,13 @@ const createToDoItem = async (newItem) => {
     completedAt: null,
   };
   return (await axios.post("http://localhost:3001/items", itemWithDates)).data;
-};
+  },
 
-/**
- * Delete a todo item.
- */
-const deleteToDoItem = async (id) => {
+  deleteToDoItem: async (id) => {
   await axios.delete(`http://localhost:3001/items/${id}`);
-};
+  },
 
-/**
- * Update a todo item.
- */
-const updateToDoItem = async (id, updatedItem) => {
+  updateToDoItem: async (id, updatedItem) => {
   const now = new Date().toISOString();
   const itemWithDates = {
     ...updatedItem,
@@ -196,24 +187,39 @@ export const ToDoItemsPage = () => {
   const [lists, setLists] = useState([]);
   const [selectedListId, setSelectedListId] = useState(null);
   const [todoItems, setTodoItems] = useState([]);
+  const [allTodos, setAllTodos] = useState([]); // State for all todos (completed + incomplete)
   const [loading, setLoading] = useState(true);
   const [newListName, setNewListName] = useState("");
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
   const [showStarred, setShowStarred] = useState(false);
-  const [showTaskFormForList, setShowTaskFormForList] = useState(null); // Track which list's task form is visible
-  const [selectedFilterListId, setSelectedFilterListId] = useState(""); // Track the selected list for filtering
-  const [dateRange, setDateRange] = useState([null, null]); // Track the selected date range
+  const [showTaskFormForList, setShowTaskFormForList] = useState(null);
+  const [selectedFilterListId, setSelectedFilterListId] = useState("");
+  const [dateRange, setDateRange] = useState([null, null]);
   const [startDate, endDate] = dateRange;
+  const [progress, setProgress] = useState({}); // Progress for each list
 
-  // Fetch lists from the server
-  const fetchLists = async () => {
+  // Fetch lists and todos on component mount
+  useEffect(() => {
+    const fetchData = async () => {
     try {
-      const lists = await getAllLists();
+        const lists = await todoService.getAllLists();
       setLists(lists);
-      if (lists.length > 0) {
-        setSelectedListId(lists[0].id); // Select the first list by default
-      }
+
+        const todos = await todoService.getAllToDoItems(); // Fetch incomplete todos
+        setTodoItems(todos);
+
+        const allTodos = await todoService.getAllTodos(); // Fetch all todos
+        setAllTodos(allTodos); // Store all todos in state
+
+        // Calculate progress for each list
+        const progressData = {};
+        for (const list of lists) {
+          const todosForList = allTodos.filter((todo) => todo.listId === list.id);
+          const completedTodos = todosForList.filter((todo) => todo.isComplete).length;
+          progressData[list.id] = (completedTodos / todosForList.length) * 100 || 0;
+        }
+        setProgress(progressData);
     } catch (error) {
       console.error("Failed to fetch lists.", error);
     }
@@ -231,52 +237,42 @@ export const ToDoItemsPage = () => {
     }
   };
 
-  // Fetch todos on component mount
-  useEffect(() => {
-    fetchLists();
+    fetchData();
   }, []);
 
-  useEffect(() => {
-    if (selectedListId) {
-      fetchItems(selectedListId);
-    }
-  }, [selectedListId]);
-
-  useEffect(() => {
-    if (selectedFilterListId !== "") {
-      fetchItems(selectedFilterListId); // Fetch items for the selected filter list
-    } else {
-      fetchItems(null); // Fetch items for all lists
-    }
-  }, [selectedFilterListId]);
-
+  // Handle creating a new list
   const handleCreateList = async () => {
     if (!newListName) return;
-    const newList = await createList(newListName);
+    const newList = await todoService.createList(newListName);
     setLists([...lists, newList]);
     setNewListName("");
   };
 
+  // Handle creating a new todo item
   const handleCreateTask = async (listId, heading, body) => {
     if (!heading || !body || !listId) return;
-
     const newItem = { heading, body, isComplete: false, listId };
-    const createdItem = await createToDoItem(newItem);
+    const createdItem = await todoService.createToDoItem(newItem);
     setTodoItems([...todoItems, createdItem]);
-    setShowTaskFormForList(null); // Hide the task form after creation
+    setShowTaskFormForList(null);
   };
 
+  // Handle deleting a todo item
   const handleDelete = async (id) => {
-    await deleteToDoItem(id);
-    await fetchItems(selectedFilterListId || null);
+    await todoService.deleteToDoItem(id);
+    const updatedItems = await todoService.getAllToDoItems(selectedFilterListId || null);
+    setTodoItems(updatedItems);
     setDeleteModalOpen(false);
   };
 
+  // Handle updating a todo item
   const handleUpdate = async (id, updatedItem) => {
-    await updateToDoItem(id, updatedItem); // Update the to-do
-    await fetchItems(selectedFilterListId || null); // Refresh the list
+    await todoService.updateToDoItem(id, updatedItem);
+    const updatedItems = await todoService.getAllToDoItems(selectedFilterListId || null);
+    setTodoItems(updatedItems);
   };
 
+  // Handle toggling a todo's starred status
   const handleStar = (id) => {
     setTodoItems((prevItems) =>
       prevItems.map((item) =>
@@ -285,11 +281,7 @@ export const ToDoItemsPage = () => {
     );
   };
 
-  const calculateProgress = (todos) => {
-    const completedTodos = todos.filter((todo) => todo.isComplete).length;
-    return (completedTodos / todos.length) * 100 || 0;
-  };
-
+  // Filter todos based on selected list and date range
   const filteredTodos = todoItems.filter((todo) => {
     if (showStarred && !todo.starred) return false;
     if (selectedFilterListId && todo.listId !== selectedFilterListId) return false;
@@ -327,11 +319,11 @@ export const ToDoItemsPage = () => {
                   <div className="w-full bg-gray-300 rounded-full h-2">
                     <div
                       className="bg-blue-500 h-2 rounded-full"
-                    style={{ width: `${calculateProgress(todoItems, list.id)}%` }}
+                          style={{ width: `${progress[list.id] || 0}%` }}
                     ></div>
                   </div>
                 <div className="mt-1 text-center text-gray-600">
-                  {`${todoItems.filter((todo) => todo.listId === list.id && todo.isComplete).length} / ${todoItems.filter((todo) => todo.listId === list.id).length} completed`}
+                        {`${allTodos.filter((todo) => todo.listId === list.id && todo.isComplete).length} / ${allTodos.filter((todo) => todo.listId === list.id).length} completed`}
                 </div>
               </div>
             </div>
@@ -392,17 +384,15 @@ export const ToDoItemsPage = () => {
       </option>
     ))}
   </select>
-  <div className="flex-grow"> {/* Ensure DatePicker takes remaining space */}
+            <div className="flex-grow">
     <DatePicker
       selectsRange={true}
       startDate={startDate}
       endDate={endDate}
-      onChange={(update) => {
-        setDateRange(update);
-      }}
+                onChange={(update) => setDateRange(update)}
       isClearable={true}
       placeholderText="Filter by date"
-      className="input input-bordered w-full" // Ensure full width
+                className="input input-bordered w-full"
     />
   </div>
 </div>
@@ -436,8 +426,8 @@ export const ToDoItemsPage = () => {
               }}
               onUpdate={handleUpdate}
               onStar={handleStar}
-              fetchItems={fetchItems} // Pass fetchItems as a prop
-              selectedFilterListId={selectedFilterListId} // Pass selectedFilterListId instead of selectedListId
+              fetchItems={todoService.getAllToDoItems}
+              selectedFilterListId={selectedFilterListId}
             />
           ))
         )}
