@@ -39,6 +39,12 @@ const TodoItem = ({ item, isLast, onToggleCompletion }) => {
       <div className="TodoItemContainer">
         <p className="TodoItemHeader">{item.heading}</p>
         <p className="TodoText">{item.body}</p>
+        <button
+          className="btn btn-secondary"
+          onClick={() => onToggleCompletion(item.id, item.isComplete)}
+        >
+          Move Back to To-Do
+        </button>
       </div>
       {!isLast && <Spacer height="5vmin" />}
     </>
