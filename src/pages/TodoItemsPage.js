@@ -125,13 +125,18 @@ export const ToDoItemsPage = () => {
   const [itemToDelete, setItemToDelete] = useState(null);
 
   useEffect(() => {
-    getAllToDoItems()
-      .then((result) => {
-        setTodoItems(result);
-      })
-      .catch(() => {
-        console.error("Failed to fetch to-do items.");
-      });
+    const fetchItems = async () => {
+      try {
+        const items = await getAllToDoItems();
+        setTodoItems(items);
+      } catch (error) {
+        console.error("Failed to fetch to-do items.", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchItems();
   }, []);
 
   return (
