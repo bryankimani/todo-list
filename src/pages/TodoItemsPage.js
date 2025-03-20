@@ -16,7 +16,14 @@ const getAllToDoItems = async () => {
  * Create a new todo item.
  */
 const createToDoItem = async (newItem) => {
-  return (await axios.post("http://localhost:3001/items", newItem)).data;
+  const now = new Date().toISOString(); // Get current timestamp
+  const itemWithDates = {
+    ...newItem,
+    createdAt: now, // Set creation date
+    updatedAt: now, // Set update date (same as creation date initially)
+    completedAt: null, // Set completion date to null initially
+  };
+  return (await axios.post("http://localhost:3001/items", itemWithDates)).data;
 };
 
 /**
@@ -30,7 +37,13 @@ const deleteToDoItem = async (id) => {
  * Update a todo item.
  */
 const updateToDoItem = async (id, updatedItem) => {
-  return (await axios.patch(`http://localhost:3001/items/${id}`, updatedItem)).data;
+  const now = new Date().toISOString(); // Get current timestamp
+  const itemWithDates = {
+    ...updatedItem,
+    updatedAt: now, // Update the timestamp
+    completedAt: updatedItem.isComplete ? now : null, // Set completion date if isComplete is true
+  };
+  return (await axios.patch(`http://localhost:3001/items/${id}`, itemWithDates)).data;
 };
 
 /**
@@ -40,6 +53,11 @@ const TodoItem = ({ item, isLast, onDelete, onUpdate }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [updatedHeading, setUpdatedHeading] = useState(item.heading);
   const [updatedBody, setUpdatedBody] = useState(item.body);
+
+  // Provide default values for missing fields
+  const createdAt = item.createdAt || "Unknown";
+  const updatedAt = item.updatedAt || "Unknown";
+  const completedAt = item.completedAt || null;
 
   const handleUpdate = async () => {
     await onUpdate(item.id, { heading: updatedHeading, body: updatedBody });
