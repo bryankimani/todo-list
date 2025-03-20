@@ -20,9 +20,11 @@ const todoService = {
 
   toggleCompletion: async (id, isComplete) => {
     try {
+      const now = new Date().toISOString();
       const response = await axios.patch(`http://localhost:3001/items/${id}`, {
         isComplete: !isComplete, // Toggle completion status
-        completedAt: !isComplete ? null : new Date().toISOString(), // Set completedAt to null if marking as incomplete
+        updatedAt: now, // Update the updatedAt field
+        completedAt: !isComplete ? null : now, // Set completedAt based on the new isComplete value
       });
       console.log("Toggled item:", response.data); // Debugging
       return response.data;
