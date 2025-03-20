@@ -1,7 +1,4 @@
 import "../App.css";
-import { Spacer } from "../Utils";
-import "./Common.css";
-import "./TodoItems.css";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
