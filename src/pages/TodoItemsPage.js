@@ -265,23 +265,64 @@ export const ToDoItemsPage = () => {
     <div className="flex flex-col md:flex-row min-h-screen">
       {/* Sidebar */}
       <div className="w-full md:w-1/4 bg-base-200 p-4">
-        <h2 className="text-xl font-bold mb-4">Create New Todo</h2>
+        <h2 className="text-xl font-bold mb-4">Lists</h2>
         <input
           type="text"
-          placeholder="Heading"
-          value={newHeading}
-          onChange={(e) => setNewHeading(e.target.value)}
+          placeholder="New List Name"
+          value={newListName}
+          onChange={(e) => setNewListName(e.target.value)}
           className="input input-bordered w-full mb-2"
         />
-        <textarea
-          placeholder="Body"
-          value={newBody}
-          onChange={(e) => setNewBody(e.target.value)}
-          className="textarea textarea-bordered w-full mb-2"
-        />
-        <button onClick={handleCreate} className="btn btn-primary w-full">
-          Create
+        <button onClick={handleCreateList} className="btn btn-primary w-full mb-4">
+          Create List
         </button>
+        {lists.map((list) => (
+          <div key={list.id} className="mb-4">
+            <div
+              className="p-2 hover:bg-base-300 cursor-pointer"
+              onClick={() => setSelectedListId(list.id)}
+            >
+              <div>{list.name}</div>
+              <div className="w-full bg-gray-300 rounded-full h-2">
+                <div
+                  className="bg-blue-500 h-2 rounded-full"
+                  style={{ width: `${calculateProgress(todoItems)}%` }}
+                ></div>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowTaskFormForList(list.id)}
+              className="btn btn-secondary w-full mt-2"
+            >
+              Add Task
+            </button>
+            {showTaskFormForList === list.id && (
+              <div className="mt-2">
+                <input
+                  type="text"
+                  placeholder="Task Heading"
+                  className="input input-bordered w-full mb-2"
+                  id={`task-heading-${list.id}`}
+        />
+        <textarea
+                  placeholder="Task Body"
+          className="textarea textarea-bordered w-full mb-2"
+                  id={`task-body-${list.id}`}
+        />
+                <button
+                  onClick={() => {
+                    const heading = document.getElementById(`task-heading-${list.id}`).value;
+                    const body = document.getElementById(`task-body-${list.id}`).value;
+                    handleCreateTask(list.id, heading, body);
+                  }}
+                  className="btn btn-primary w-full"
+                >
+                  Save Task
+        </button>
+              </div>
+            )}
+          </div>
+        ))}
       </div>
 
       {/* Content */}
