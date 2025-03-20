@@ -64,8 +64,13 @@ const TodoItem = ({ item, isLast, onDelete, onUpdate }) => {
     setIsEditing(false);
   };
 
+  const handleMarkAsComplete = async () => {
+    await onUpdate(item.id, { isComplete: true });
+    onRefresh(); // Refresh the list after marking as complete
+  };
+
   return (
-    <div className="card bg-base-100 shadow-xl mb-4">
+    <div className={`card shadow-xl mb-4 ${item.isComplete ? "bg-base-200" : "bg-base-100"}`}>
       <div className="card-body">
         {isEditing ? (
           <>
@@ -99,6 +104,11 @@ const TodoItem = ({ item, isLast, onDelete, onUpdate }) => {
               )}
             </div>
             <div className="card-actions justify-end">
+              {!item.isComplete && (
+                <button onClick={handleMarkAsComplete} className="btn btn-success">
+                  Mark as Complete
+                </button>
+              )}
               <button onClick={() => setIsEditing(true)} className="btn btn-secondary">
                 Edit
               </button>
