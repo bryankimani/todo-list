@@ -12,12 +12,12 @@
   "items": [
     {
       "id": "1",
-      "heading": "Grocery Shopping",
-      "body": "Pick up milk, bread, eggs, and vegetables from the supermarket. Check the expiration dates and make sure to get organic produce if possible. Yes",
-      "isComplete": true,
+      "heading": "Grocery Shopping at Galleria Mall",
+      "body": "Pick up milk, bread, eggs, Meat and vegetables from the supermarket. Check the expiration dates and make sure to get organic produce if possible. ",
+      "isComplete": false,
       "listId": "1",
       "createdAt": "2025-03-20T14:52:46.412Z",
-      "updatedAt": "2025-03-20T20:29:58.379Z"
+      "updatedAt": "2025-03-20T22:17:56.340Z"
     },
     {
       "id": "2",
@@ -26,34 +26,25 @@
       "isComplete": false,
       "listId": "2",
       "createdAt": "2025-03-20T14:53:35.425Z",
-      "updatedAt": "2025-03-20T20:29:48.585Z"
+      "updatedAt": "2025-03-20T22:17:29.268Z"
     },
     {
       "id": "3",
       "heading": "Finish Project Report",
       "body": "Complete the project report by adding the final section on results and conclusions. Proofread the entire document for any errors and submit it by 5 PM.",
-      "isComplete": true,
+      "isComplete": false,
       "listId": "1",
       "createdAt": "2025-03-20T18:52:25.211Z",
-      "updatedAt": "2025-03-20T20:30:02.759Z"
+      "updatedAt": "2025-03-20T22:17:29.687Z"
     },
     {
       "id": "4",
-      "heading": "Exercise",
+      "heading": "Exercise in the gym",
       "body": "Go for a 30-minute run in the park. If the weather is bad, do a workout video at home. Stretch afterwards to prevent any muscle soreness.",
-      "isComplete": true,
+      "isComplete": false,
       "listId": "2",
       "createdAt": "2025-03-20T18:57:55.649Z",
-      "updatedAt": "2025-03-20T20:30:08.693Z"
-    },
-    {
-      "id": "ef03",
-      "heading": "Study ruby on rails",
-      "body": "Get started with Ruby nuggets",
-      "isComplete": true,
-      "listId": "1",
-      "createdAt": "2025-03-20T20:12:04.765Z",
-      "updatedAt": "2025-03-20T20:30:19.139Z"
+      "updatedAt": "2025-03-20T22:17:30.151Z"
     }
   ]
 }
