@@ -40,13 +40,25 @@ export const Homepage = () => {
   return (
     <div className="container mx-auto">
       {/* Header */}
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-primary">Welcome to the Home Page!</h1>
-        <p className="text-lg text-gray-600">Click a button above to get started.</p>
+      <div className="hero bg-base-200 mt-10">
+        <div className="hero-content flex-col lg:flex-row-reverse">
+          {/* Pie Chart Card */}
+          <div className="w-full lg:w-1/2 flex justify-center">
+            <ProgressChart data={todoData} />
+          </div>
+          {/* Content Section */}
+          <div className="w-full lg:w-1/2">
+            <h1 className="text-5xl font-bold">Organize your work and life, finally.</h1>
+            <p className="py-6">
+            Simplify life for both you and your team with the world’s #1 task manager and to-do list app.<br />
+
+            374K+ ★★★★★ reviews from Google Play
+            </p>
+            <a className="btn btn-primary" href="/todos">Start for free</a>
+          </div>
+        </div>
       </div>
 
-      {/* Pie Chart Card */}
-      <ProgressChart data={todoData} />
     </div>
   );
 };
