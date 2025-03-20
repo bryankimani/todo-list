@@ -193,8 +193,26 @@ export const ToDoItemsPage = () => {
           <p>No to-do items found.</p>
         ) : (
         todoItems.map((item, i) => (
-          <TodoItem key={i} item={item} isLast={i === todoItems.length - 1} />
-        ))}
+            <TodoItem
+              key={item.id}
+              item={item}
+              isLast={i === todoItems.length - 1}
+              onDelete={(id) => {
+                setItemToDelete(id);
+                setDeleteModalOpen(true);
+              }}
+              onUpdate={handleUpdate}
+            />
+          ))
+        )}
+      </div>
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmationModal
+        isOpen={deleteModalOpen}
+        onConfirm={() => handleDelete(itemToDelete)}
+        onCancel={() => setDeleteModalOpen(false)}
+      />
     </div>
   );
 };
