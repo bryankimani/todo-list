@@ -58,13 +58,20 @@ export const CompletedItemsPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getAllToDoItems()
-      .then((result) => {
-        setTodoItems(result);
-      })
-      .catch(() => {
-        console.error("Failed to fetch completed items.");
-      });
+    const fetchItems = async () => {
+      try {
+        const items = await todoService.getAllToDoItems();
+        console.log("Fetched items:", items); // Debugging
+        setTodoItems(items);
+      } catch (error) {
+        console.error("Failed to fetch completed items.", error);
+        setTodoItems([]); // Set to empty array to avoid rendering issues
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchItems();
   }, []);
 
   return (
