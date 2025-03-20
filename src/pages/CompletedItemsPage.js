@@ -37,14 +37,11 @@ const TodoItem = ({ item, isLast, onToggleCompletion }) => {
       <div className="card-body"> {/* Fixed height and scrollable */}
         <h2 className="card-title">{item.heading}</h2>
         <div class="card-item-body">
-        <p>{item.body}</p>
+          <p>{item.body}</p>
         </div>
         <div className="text-sm text-gray-500">
           <p>Created: {new Date(item.createdAt).toLocaleString()}</p>
           <p>Updated: {new Date(item.updatedAt).toLocaleString()}</p>
-          {item.isComplete && (
-            <p>Completed: {new Date(item.completedAt).toLocaleString()}</p>
-          )}
         </div>
         <div className="card-actions justify-end">
           <button
@@ -103,15 +100,15 @@ export const CompletedItemsPage = () => {
         </div>
       ) : todoItems.length === 0 ? (
         <div className="hero bg-base-200 min-h-screen">
-              <div className="hero-content text-center">
-                <div className="max-w-md">
-                  <h1 className="text-5xl font-bold">Hello there</h1>
-                  <p className="py-6">
-                    You don't have any completed tasks yet.
-                  </p>
-                </div>
-              </div>
+          <div className="hero-content text-center">
+            <div className="max-w-md">
+              <h1 className="text-5xl font-bold">Hello there</h1>
+              <p className="py-6">
+                You don't have any completed tasks yet.
+              </p>
             </div>
+          </div>
+        </div>
       ) : (
         <div className="card-container"> {/* Grid container */}
           {todoItems.map((item, i) => (

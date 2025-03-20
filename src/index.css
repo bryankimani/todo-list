@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+
+@import url('https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&display=swap');
+
+body,
+  .page-wrapper {
+  font-family: "Afacad Flux", sans-serif;
+  font-size: 1.375rem;
+  line-height: 1.45;
+}
+
 /* Custom styles for react-datepicker */
 .react-datepicker-wrapper {
   width: max-content; /* Ensure the wrapper takes full width */
@@ -38,6 +48,10 @@
   overflow-y: auto; /* Enable vertical scrollbar */
 }
 
+.section-about {
+  color: rgb(13 14 29 / var(--tw-text-opacity, 1));
+}
+
 
 /* Container for the cards */
 .card-container {
@@ -58,4 +72,101 @@
   .card-container {
     grid-template-columns: 1fr; /* 1 column for small screens */
   }
+}
+
+/* Default Heading */
+
+h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .display-heading {
+  font-weight: 600;
+}
+
+h1,
+  .display-heading-1 {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+@media (min-width: 576px) {
+  h1,
+  .display-heading-1 {
+    font-size: 3rem;
+    line-height: 1;
+  }
+}
+
+@media (min-width: 768px) {
+  h1,
+  .display-heading-1 {
+    font-size: 3.75rem;
+    line-height: 1;
+  }
+}
+
+@media (min-width: 992px) {
+  h1,
+  .display-heading-1 {
+    font-size: 4.5rem;
+    line-height: 1;
+    letter-spacing: -1px;
+  }
+}
+
+@media (min-width: 1200px) {
+  h1,
+  .display-heading-1 {
+    font-size: 6.25rem;
+  }
+}
+
+h2,
+  .display-heading-2 {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  line-height: 1;
+}
+
+@media (min-width: 768px) {
+  h2,
+  .display-heading-2 {
+    font-size: 3rem;
+    line-height: 1;
+  }
+}
+
+@media (min-width: 992px) {
+  h2,
+  .display-heading-2 {
+    font-size: 3.5rem;
+    letter-spacing: -1px;
+  }
+}
+
+h3,
+  .display-heading-3 {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+h4,
+  .display-heading-4 {
+  font-size: 1.625rem;
+  line-height: 1.375;
+}
+
+h5,
+  .display-heading-5 {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+h6,
+  .display-heading-6 {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
 }
