@@ -153,25 +153,27 @@ const DeleteConfirmationModal = ({ isOpen, onConfirm, onCancel }) => {
  */
 export const ToDoItemsPage = () => {
   const [todoItems, setTodoItems] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // Loading state
   const [newHeading, setNewHeading] = useState("");
   const [newBody, setNewBody] = useState("");
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
 
-  useEffect(() => {
-    const fetchItems = async () => {
+  // Helper function to refresh the list of incomplete tasks
+  const refreshList = async () => {
+    setLoading(true); // Start loading
       try {
         const items = await getAllToDoItems();
         setTodoItems(items);
       } catch (error) {
-        console.error("Failed to fetch to-do items.", error);
+      console.error("Failed to refresh to-do items.", error);
       } finally {
-        setLoading(false);
+      setLoading(false); // Stop loading regardless of success or failure
       }
     };
 
-    fetchItems();
+  useEffect(() => {
+    refreshList(); // Initial fetch
   }, []);
 
   const handleCreate = async () => {
@@ -237,6 +239,7 @@ export const ToDoItemsPage = () => {
                 setDeleteModalOpen(true);
               }}
               onUpdate={handleUpdate}
+              onRefresh={refreshList} // Pass the refresh function
             />
           ))
         )}
