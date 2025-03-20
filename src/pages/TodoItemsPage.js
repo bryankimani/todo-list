@@ -56,6 +56,7 @@ const todoService = {
     completedAt: updatedItem.isComplete ? now : null,
   };
   return (await axios.patch(`http://localhost:3001/items/${id}`, itemWithDates)).data;
+  },
 };
 
 /**
