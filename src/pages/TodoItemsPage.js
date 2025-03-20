@@ -25,7 +25,14 @@ const createList = async (name) => {
  * Fetch all to-do items for a specific list.
  */
 const getAllToDoItems = async (listId) => {
-  return (await axios.get(`http://localhost:3001/items?listId=${listId}`)).data;
+  let url = "http://localhost:3001/items?isComplete=false";
+  
+  // Append listId to the URL only if it's provided
+  if (listId) {
+    url += `&listId=${listId}`;
+  }
+
+  return (await axios.get(url)).data;
 };
 
 /**
@@ -65,15 +72,10 @@ const updateToDoItem = async (id, updatedItem) => {
 /**
  * Single todo item component.
  */
-const TodoItem = ({ item, isLast, onDelete, onUpdate, onStar }) => {
+const TodoItem = ({ item, isLast, onDelete, onUpdate, onStar, fetchItems, selectedListId }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [updatedHeading, setUpdatedHeading] = useState(item.heading);
   const [updatedBody, setUpdatedBody] = useState(item.body);
-
-  // Provide default values for missing fields
-  const createdAt = item.createdAt || "Unknown";
-  const updatedAt = item.updatedAt || "Unknown";
-  const completedAt = item.completedAt || null;
 
   const handleUpdate = async () => {
     await onUpdate(item.id, { heading: updatedHeading, body: updatedBody });
@@ -82,6 +84,7 @@ const TodoItem = ({ item, isLast, onDelete, onUpdate, onStar }) => {
 
   const handleMarkAsComplete = async () => {
     await onUpdate(item.id, { isComplete: true });
+    await fetchItems(selectedListId); // Refresh the list
   };
 
   return (
@@ -180,6 +183,7 @@ export const ToDoItemsPage = () => {
   const [showStarred, setShowStarred] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showTaskFormForList, setShowTaskFormForList] = useState(null); // Track which list's task form is visible
+  const [selectedFilterListId, setSelectedFilterListId] = useState(""); // Track the selected list for filtering
 
   // Fetch lists from the server
   const fetchLists = async () => {
@@ -212,10 +216,14 @@ export const ToDoItemsPage = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedListId) {
-      fetchItems(selectedListId);
+    if (selectedFilterListId === "") {
+      // Fetch items from all lists
+      fetchItems(null); 
+    } else {
+      // Fetch items from the selected list
+      fetchItems(selectedFilterListId);
     }
-  }, [selectedListId]);
+  }, [selectedFilterListId]);
 
   const handleCreateList = async () => {
     if (!newListName) return;
@@ -240,8 +248,8 @@ export const ToDoItemsPage = () => {
   };
 
   const handleUpdate = async (id, updatedItem) => {
-    await updateToDoItem(id, updatedItem);
-    await fetchItems(selectedListId);
+    await updateToDoItem(id, updatedItem); // Update the to-do
+    await fetchItems(selectedListId); // Refresh the list
   };
 
   const handleStar = (id) => {
@@ -259,6 +267,7 @@ export const ToDoItemsPage = () => {
 
   const filteredTodos = todoItems.filter((todo) => {
     if (showStarred && !todo.starred) return false;
+    if (selectedFilterListId && todo.listId !== selectedFilterListId) return false;
     const todoDate = new Date(todo.createdAt).toDateString();
     return todoDate === selectedDate.toDateString();
   });
@@ -280,10 +289,7 @@ export const ToDoItemsPage = () => {
         </button>
         {lists.map((list) => (
           <div key={list.id} className="mb-4">
-            <div
-              className="p-2 hover:bg-base-300 cursor-pointer"
-              onClick={() => setSelectedListId(list.id)}
-            >
+            <div className="p-2 hover:bg-base-300 cursor-pointer">
               <div>{list.name}</div>
               <div className="w-full bg-gray-300 rounded-full h-2">
                 <div
@@ -305,12 +311,12 @@ export const ToDoItemsPage = () => {
                   placeholder="Task Heading"
                   className="input input-bordered w-full mb-2"
                   id={`task-heading-${list.id}`}
-        />
-        <textarea
+                />
+                <textarea
                   placeholder="Task Body"
-          className="textarea textarea-bordered w-full mb-2"
+                  className="textarea textarea-bordered w-full mb-2"
                   id={`task-body-${list.id}`}
-        />
+                />
                 <button
                   onClick={() => {
                     const heading = document.getElementById(`task-heading-${list.id}`).value;
@@ -320,7 +326,7 @@ export const ToDoItemsPage = () => {
                   className="btn btn-primary w-full"
                 >
                   Save Task
-        </button>
+                </button>
               </div>
             )}
           </div>
@@ -330,9 +336,23 @@ export const ToDoItemsPage = () => {
       {/* Content */}
       <div className="w-full md:w-3/4 p-4">
         <div className="flex justify-between mb-4">
-          <button onClick={() => setShowStarred(!showStarred)} className="btn btn-warning">
-            {showStarred ? "Show All" : "Show Starred"}
-          </button>
+          <div className="flex gap-2">
+            <button onClick={() => setShowStarred(!showStarred)} className="btn btn-warning">
+              {showStarred ? "Show All" : "Show Starred"}
+            </button>
+            <select
+              value={selectedFilterListId}
+              onChange={(e) => setSelectedFilterListId(e.target.value)}
+              className="select select-bordered"
+            >
+              <option value="">All Lists</option> {/* This will trigger fetching all lists */}
+              {lists.map((list) => (
+                <option key={list.id} value={list.id}>
+                  {list.name}
+                </option>
+              ))}
+            </select>
+          </div>
           <ReactCalendar onChange={setSelectedDate} value={selectedDate} />
         </div>
         {loading ? (
@@ -353,6 +373,8 @@ export const ToDoItemsPage = () => {
               }}
               onUpdate={handleUpdate}
               onStar={handleStar}
+              fetchItems={fetchItems} // Pass fetchItems as a prop
+              selectedListId={selectedListId} // Pass selectedListId as a prop
             />
           ))
         )}
