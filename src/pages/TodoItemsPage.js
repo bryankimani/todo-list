@@ -13,7 +13,28 @@ const getAllToDoItems = async () => {
 };
 
 /**
- * This defines a single todo item, which is defined by the schema in `database/db.json`.
+ * Create a new todo item.
+ */
+const createToDoItem = async (newItem) => {
+  return (await axios.post("http://localhost:3001/items", newItem)).data;
+};
+
+/**
+ * Delete a todo item.
+ */
+const deleteToDoItem = async (id) => {
+  await axios.delete(`http://localhost:3001/items/${id}`);
+};
+
+/**
+ * Update a todo item.
+ */
+const updateToDoItem = async (id, updatedItem) => {
+  return (await axios.patch(`http://localhost:3001/items/${id}`, updatedItem)).data;
+};
+
+/**
+ * Single todo item component.
  */
 const TodoItem = ({ item, isLast }) => {
   return (
