@@ -117,8 +117,12 @@ const DeleteConfirmationModal = ({ isOpen, onConfirm, onCancel }) => {
  * This defines the to-do list, which contains items that haven't been completed yet.
  */
 export const ToDoItemsPage = () => {
-  // Leave undefined so we can tell when the page is "loading"
-  const [todoItems, setTodoItems] = useState();
+  const [todoItems, setTodoItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [newHeading, setNewHeading] = useState("");
+  const [newBody, setNewBody] = useState("");
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
   useEffect(() => {
     getAllToDoItems()
