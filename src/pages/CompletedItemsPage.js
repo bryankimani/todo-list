@@ -21,7 +21,8 @@ const todoService = {
   toggleCompletion: async (id, isComplete) => {
     try {
       const response = await axios.patch(`http://localhost:3001/items/${id}`, {
-        isComplete: !isComplete,
+        isComplete: !isComplete, // Toggle completion status
+        completedAt: !isComplete ? null : new Date().toISOString(), // Set completedAt to null if marking as incomplete
       });
       console.log("Toggled item:", response.data); // Debugging
       return response.data;
@@ -38,6 +39,13 @@ const TodoItem = ({ item, isLast, onToggleCompletion }) => {
       <div className="card-body">
         <h2 className="card-title">{item.heading}</h2>
         <p>{item.body}</p>
+        <div className="text-sm text-gray-500">
+          <p>Created: {new Date(item.createdAt).toLocaleString()}</p>
+          <p>Updated: {new Date(item.updatedAt).toLocaleString()}</p>
+          {item.isComplete && (
+            <p>Completed: {new Date(item.completedAt).toLocaleString()}</p>
+          )}
+        </div>
         <div className="card-actions justify-end">
           <button
             className="btn btn-secondary"
