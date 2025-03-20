@@ -6,7 +6,21 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 /**
- * This makes a request to the server / DB to get all to-do's that aren't currently completed.
+ * Fetch all lists.
+ */
+const getAllLists = async () => {
+  return (await axios.get("http://localhost:3001/lists")).data;
+};
+
+/**
+ * Create a new list.
+ */
+const createList = async (name) => {
+  return (await axios.post("http://localhost:3001/lists", { name })).data;
+};
+
+/**
+ * Fetch all to-do items for a specific list.
  */
 const getAllToDoItems = async () => {
   return (await axios.get("http://localhost:3001/items?isComplete=false")).data;
@@ -151,15 +165,32 @@ const DeleteConfirmationModal = ({ isOpen, onConfirm, onCancel }) => {
  * Main todo list page with sidebar and content.
  */
 export const ToDoItemsPage = () => {
+  const [lists, setLists] = useState([]);
+  const [selectedListId, setSelectedListId] = useState(null);
   const [todoItems, setTodoItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [newHeading, setNewHeading] = useState("");
-  const [newBody, setNewBody] = useState("");
+  const [newListName, setNewListName] = useState("");
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
+  const [showStarred, setShowStarred] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [showTaskFormForList, setShowTaskFormForList] = useState(null); // Track which list's task form is visible
 
-  // Fetch todos from the server
-  const fetchItems = async () => {
+  // Fetch lists from the server
+  const fetchLists = async () => {
+    try {
+      const lists = await getAllLists();
+      setLists(lists);
+      if (lists.length > 0) {
+        setSelectedListId(lists[0].id); // Select the first list by default
+      }
+    } catch (error) {
+      console.error("Failed to fetch lists.", error);
+    }
+  };
+
+  // Fetch todos for the selected list
+  const fetchItems = async (listId) => {
     try {
       const items = await getAllToDoItems();
       setTodoItems(items);
