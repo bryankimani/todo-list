@@ -38,9 +38,11 @@ const todoService = {
 const TodoItem = ({ item, isLast, onToggleCompletion }) => {
   return (
     <div className="card bg-base-100 shadow-xl mb-8">
-      <div className="card-body">
+      <div className="card-body"> {/* Fixed height and scrollable */}
         <h2 className="card-title">{item.heading}</h2>
+        <div class="card-item-body">
         <p>{item.body}</p>
+        </div>
         <div className="text-sm text-gray-500">
           <p>Created: {new Date(item.createdAt).toLocaleString()}</p>
           <p>Updated: {new Date(item.updatedAt).toLocaleString()}</p>
@@ -115,7 +117,7 @@ export const CompletedItemsPage = () => {
               </div>
             </div>
       ) : (
-        <div className="space-y-8">
+        <div className="card-container"> {/* Grid container */}
           {todoItems.map((item, i) => (
             <TodoItem
               key={item.id} // Use item.id instead of index for better key management
