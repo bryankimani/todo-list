@@ -288,16 +288,16 @@ export const ToDoItemsPage = () => {
     <div className="container mx-auto flex flex-col md:flex-row min-h-screen mt-10">
       {/* Sidebar */}
       <div className="w-full md:w-1/4 bg-base-200 p-4">
-        <h2 className="text-xl font-bold mb-4">Lists</h2>
+        <h2 className="text-xl font-bold mb-4">Task Groups</h2>
         <input
           type="text"
-          placeholder="New List Name"
+          placeholder="New task group name"
           value={newListName}
           onChange={(e) => setNewListName(e.target.value)}
           className="input input-bordered w-full mb-2"
         />
         <button onClick={handleCreateList} className="btn btn-primary w-full mb-4">
-          Create List
+          Create task group
         </button>
         <ul class="list bg-base-100 rounded-box shadow-md">
         {lists.map((list, i) => (
