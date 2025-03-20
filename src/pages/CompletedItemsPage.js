@@ -32,8 +32,8 @@ const todoService = {
   },
 };
 
-const TodoItem = ({ item, isLast }) => {
-  console.log(item);
+const TodoItem = ({ item, isLast, onToggleCompletion }) => {
+  console.log(item); // Debugging
   return (
     <>
       <div className="TodoItemContainer">
