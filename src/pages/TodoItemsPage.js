@@ -4,6 +4,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { DeleteConfirmationModal } from "../components/DeleteConfirmationModal"; 
 import { NotificationContext } from "../context/NotificationContext";
+import { Pagination } from "../components/Pagination";
 
 // Service module for API calls
 const todoService = {
