@@ -4,6 +4,7 @@ import { Homepage } from "./pages/Homepage";
 import { ToDoItemsPage } from "./pages/TodoItemsPage";
 import { CompletedItemsPage } from "./pages/CompletedItemsPage";
 
+import { NotificationProvider } from "./context/NotificationContext";
 /**
  * This defines a generic app header that is used as a navigation bar for both pages in
  * this application.
@@ -44,12 +45,14 @@ const AppHeader = () => {
 function App() {
   return (
     <div className="App">
-      <AppHeader />
-      <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/todos" element={<ToDoItemsPage />} />
-        <Route path="/completed" element={<CompletedItemsPage />} />
-      </Routes>
+      <NotificationProvider>
+        <AppHeader />
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/todos" element={<ToDoItemsPage />} />
+          <Route path="/completed" element={<CompletedItemsPage />} />
+        </Routes>
+      </NotificationProvider>
     </div>
   );
 }

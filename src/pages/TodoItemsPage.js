@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { DeleteConfirmationModal } from "../components/DeleteConfirmationModal"; 
+import { NotificationContext } from "../context/NotificationContext";
 
 // Service module for API calls
 const todoService = {
@@ -166,6 +167,7 @@ export const ToDoItemsPage = () => {
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDate, endDate] = dateRange;
   const [progress, setProgress] = useState({}); // Progress for each list
+  const { showNotification } = useContext(NotificationContext);
 
   // Fetch lists and todos on component mount
   useEffect(() => {
@@ -201,31 +203,43 @@ export const ToDoItemsPage = () => {
   // Handle creating a new list
   const handleCreateList = async () => {
     if (!newListName) return;
-    const newList = await todoService.createList(newListName);
-    setLists([...lists, newList]);
-    setNewListName("");
+    try {
+      const newList = await todoService.createList(newListName);
+      setLists([...lists, newList]);
+      setNewListName("");
+      showNotification("Task group created successfully!", "success");
+    } catch (error) {
+      showNotification("Failed to create task group.", "error");
+    }
   };
 
   // Handle creating a new todo item
   const handleCreateTask = async (listId, heading, body) => {
     if (!heading || !body || !listId) return;
-    const newItem = { heading, body, isComplete: false, listId };
-    const createdItem = await todoService.createToDoItem(newItem);
-    setTodoItems([...todoItems, createdItem]);
-    setAllTodos([...allTodos, createdItem]); // Update allTodos
-    setShowTaskFormForList(null);
+    try {
+      const newItem = { heading, body, isComplete: false, listId };
+      const createdItem = await todoService.createToDoItem(newItem);
+      setTodoItems([...todoItems, createdItem]);
+      setAllTodos([...allTodos, createdItem]); // Update allTodos
+      setShowTaskFormForList(null);
+      showNotification("Todo item created successfully!", "success");
+    } catch (error) {
+      showNotification("Failed to create todo item.", "error");
+    }
   };
 
   // Handle deleting a todo item
   const handleDelete = async (id) => {
-    await todoService.deleteToDoItem(id);
-    const updatedItems = await todoService.getAllToDoItems(selectedFilterListId || null);
-    setTodoItems(updatedItems);
-
-    const updatedAllItems = await todoService.getAllTodos(selectedFilterListId || null);
-    setAllTodos(updatedAllItems); // Update allTodos
-
-    setDeleteModalOpen(false);
+    try {
+      await todoService.deleteToDoItem(id);
+      const updatedItems = await todoService.getAllToDoItems(selectedFilterListId || null);
+      setTodoItems(updatedItems);
+      showNotification("Task deleted successfully!", "success");
+    } catch (error) {
+      showNotification("Failed to delete task.", "error");
+    } finally {
+      setDeleteModalOpen(false);
+    }
   };
 
   // Handle updating a todo item
@@ -240,6 +254,7 @@ export const ToDoItemsPage = () => {
     // Find the listId of the updated task
     const updatedTask = updatedAllItems.find((item) => item.id === id);
     if (updatedTask) {
+      showNotification("Task updated successfully!", "success");
       const listId = updatedTask.listId;
   
       // Recalculate progress for the specific list

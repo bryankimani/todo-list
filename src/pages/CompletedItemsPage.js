@@ -1,7 +1,8 @@
 import "../App.css";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { DeleteConfirmationModal } from "../components/DeleteConfirmationModal";
+import { NotificationContext } from "../context/NotificationContext";
 
 // Service module for API calls
 const todoService = {
@@ -69,6 +70,7 @@ export const CompletedItemsPage = () => {
   const [loading, setLoading] = useState(true);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
+  const { showNotification } = useContext(NotificationContext);
 
   // Fetch completed items on component mount
   useEffect(() => {
@@ -106,7 +108,9 @@ export const CompletedItemsPage = () => {
       await axios.delete(`http://localhost:3001/items/${id}`);
       const updatedItems = await todoService.getAllToDoItems();
       setTodoItems(updatedItems);
+      showNotification("Task deleted successfully!", "success");
     } catch (error) {
+      showNotification("Failed to delete task.", "error");
       console.error("Failed to delete item.", error);
     } finally {
       setDeleteModalOpen(false);
