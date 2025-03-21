@@ -33,52 +33,26 @@ You can request all items in the DB by making a GET request to `http://localhost
 
 You can request _specific_ items in the DB by using query parameters, i.e. `http://localhost:3001/items?isComplete=false`.
 
-# Interview Question Instructions
 
-_Please read the README before beginning this activity_
+# Bryan Notes on running migration file
 
-### Requirements
+To run the database migration file
 
-When implementing these tasks, you should follow basic CRUD principles, i.e.:
+- Ensure Node.js is Installed 
+- cd path/to/your/project
+- run node migration.js
+- This will run the script, update the db.json file, and print a confirmation message like: Migration complete: db.json updated with new structure.
 
-- Allow users to **create** new todo's.
-- Allow users to **read** todo's (this is mainly completed for you already).
-- Allow users to **update** existing todo's (i.e. change `isCompleted` to `true`).
-- Allow users to **delete** todo's. (Should work for completed and non-completed items)
+# Bryan Notes on running the project
+- clone the project
+- cd to the project folder
+- run npm install. Make sure you have nodejs install
+- run npm start to run the app
 
-**Required:**
+# Bryan Features
 
-1. A progress tracker in the homepage - a pie chart showing the percentage of completed and to-do tasks.\*\*
-   ![Local Image](./public/tracker.png)
+- I added the look and feel using Daisy UI
+- I added the logic of filtering todo's based on their specific task group
+- I added toast notifications when various actions happens like adding or deleting a todo
 
-2. Improve the UI/UX of the app! This is intentially left open-ended to give you an opportuninty to show off your skills!
 
-   a. Some Ideas are:
-
-   - Create list button to create different task groups with to-dos
-   - ⁠Show the lists as a sidepanel
-   - Add a progress tracking bar for each list
-   - Add a calender to save and show the date and time when the to-do is created and completed
-   - Filter starred items
-   - Filter by date
-   - Move completed items back to To-do
-
-## Nice to have (bonus points, not required)
-
-- The following tasks are nice to have and are **not** required for this activity. If you feel that your task is a bonus task, please explain. This can include, but is not limited to:
-
-  - Improvements to functionality (i.e. an improvement or new feature you came up with on your own)
-
-## Important Notes
-
-Please keep the following rules in mind when completing this activity:
-
-1. **Keep this question confidential**. Do not discuss and/or share the details of this question with anyone else.
-2. **Each task requires some fullstack change**.
-
-   a. If you add new field(s) to the schema, you need to make sure that the change is backwards-compatible with the original version. Make sure you're also filtering your queries appropriately.
-
-   b. **If you are adding create, update, or delete logic, the user MUST have some way to trigger this via the UI.**
-
-3. **Maintain reactive design**. The app should be readable and functional amongst a variety of different devices and screen sizes.
-4. Ask for help anytime if something doesn't make sense or you become stuck.
