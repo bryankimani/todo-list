@@ -58,7 +58,6 @@ body,
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* 3 columns */
   gap: 1rem; /* Space between cards */
-  padding: 1rem; /* Optional padding */
 }
 
 /* Responsive behavior */
