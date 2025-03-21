@@ -1,6 +1,7 @@
 import "../App.css";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { DeleteConfirmationModal } from "../components/DeleteConfirmationModal";
 
 // Service module for API calls
 const todoService = {
@@ -31,12 +32,12 @@ const todoService = {
   },
 };
 
-const TodoItem = ({ item, isLast, onToggleCompletion }) => {
+const TodoItem = ({ item, isLast, onToggleCompletion, onDelete }) => {
   return (
     <div className="card bg-base-100 shadow-xl mb-8">
-      <div className="card-body"> {/* Fixed height and scrollable */}
+      <div className="card-body">
         <h2 className="card-title">{item.heading}</h2>
-        <div class="card-item-body">
+        <div className="card-item-body">
           <p>{item.body}</p>
         </div>
         <div className="text-sm text-gray-500">
@@ -50,6 +51,12 @@ const TodoItem = ({ item, isLast, onToggleCompletion }) => {
           >
             Move Back to To-Do
           </button>
+          <button
+            className="btn btn-error"
+            onClick={() => onDelete(item.id)}
+          >
+            Delete
+          </button>
         </div>
       </div>
     </div>
@@ -60,6 +67,8 @@ const TodoItem = ({ item, isLast, onToggleCompletion }) => {
 export const CompletedItemsPage = () => {
   const [todoItems, setTodoItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
   // Fetch completed items on component mount
   useEffect(() => {
@@ -92,6 +101,18 @@ export const CompletedItemsPage = () => {
     }
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:3001/items/${id}`);
+      const updatedItems = await todoService.getAllToDoItems();
+      setTodoItems(updatedItems);
+    } catch (error) {
+      console.error("Failed to delete item.", error);
+    } finally {
+      setDeleteModalOpen(false);
+    }
+  };
+
   return (
     <div className="container mx-auto mt-10">
       {loading ? (
@@ -117,10 +138,21 @@ export const CompletedItemsPage = () => {
               item={item}
               isLast={i === todoItems.length - 1}
               onToggleCompletion={handleToggleCompletion}
+              onDelete={(id) => {
+                setItemToDelete(id);
+                setDeleteModalOpen(true);
+              }}
             />
           ))}
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmationModal
+        isOpen={deleteModalOpen}
+        onConfirm={() => handleDelete(itemToDelete)}
+        onCancel={() => setDeleteModalOpen(false)}
+      />
     </div>
   );
 };
