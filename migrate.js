@@ -29,8 +29,15 @@ const updatedItems = db.items.map((item, index) => {
     listId: listId,
   createdAt: item.createdAt || new Date().toISOString(),
   updatedAt: item.updatedAt || new Date().toISOString()
-}));
+  };
+});
+
+// Create the new database structure
+const newDb = {
+  lists: lists,
+  items: updatedItems
+};
 
 // Save the updated db.json
-fs.writeFileSync(dbPath, JSON.stringify(db, null, 2));
-console.log("Migration complete: db.json updated with new fields.");
+fs.writeFileSync(dbPath, JSON.stringify(newDb, null, 2));
+console.log("Migration complete: db.json updated with new structure.");
